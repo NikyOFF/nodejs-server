@@ -1,0 +1,1 @@
+export type AnyKeys<T> = { [P in keyof T]?: T[P] | any }
