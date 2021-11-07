@@ -1,6 +1,6 @@
 export enum EUserRole {
-    USER = 'user',
-    ADMIN = 'admin'
+    USER,
+    ADMIN
 }
 
 export type UserRole = keyof typeof EUserRole;

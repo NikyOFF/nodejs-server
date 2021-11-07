@@ -1,3 +1,4 @@
 export enum EJobName {
-    EXAMPLE = 'example'
+    EXAMPLE = 'example',
+    UPDATE_RATES = 'update_rates'
 }

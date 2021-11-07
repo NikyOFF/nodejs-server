@@ -12,12 +12,14 @@ export default async (agenda: Agenda) => {
             EJobName.EXAMPLE,
             {
                 priority: JobPriority.high,
-                concurrency: config.AGENDA_CONCURRENCY
+                concurrency: config.AGENDA.CONCURRENCY
             },
             exampleSequence
-        )
+        );
 
         await agenda.start();
+
+        await agenda.every("day", EJobName.EXAMPLE);
 
         Logger.verbose("Injected!", {label: 'jobsLoader'});
     } catch (error) {

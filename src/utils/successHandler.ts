@@ -1,4 +1,4 @@
-import { Response } from "express";
+import {Response} from "express";
 import {Container} from "typedi";
 import {Logger} from "winston";
 
@@ -14,7 +14,7 @@ export default function successHandler(response: Response, information?: ISucces
     const logger = Container.get<Logger>(EContainerName.LOGGER);
 
     if (information?.message) {
-        logger.info(information.message, { label: "successHandler" });
+        logger.info(information.message, {label: "successHandler"});
     }
 
     response.status(information?.code ?? 200).json({

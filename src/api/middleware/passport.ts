@@ -1,11 +1,11 @@
 import {NextFunction, Request, Response} from "express";
 import passport, {AuthenticateOptions} from "passport";
 import {Strategy, StrategyOptions, VerifyCallback} from "passport-jwt";
+import config from "../../config"
 import {Container} from "typedi";
 import {EContainerName} from "@/enums/EContainerName";
 import {EJwtStrategy, JwtStrategy} from "@/enums/EJwtStrategy";
 import {EUserRole} from "@/enums/EUserRole";
-import config from "@/config";
 
 //Strategy options
 const userOptions: StrategyOptions = {
@@ -70,7 +70,8 @@ export const authenticate = (strategy: EJwtStrategy | EJwtStrategy[], options: O
 
         if (!record) {
             response.clearCookie('TOKEN');
-            return next(new Error("[callback] unauthorized"));
+
+            return next(new Error("[callback] Unauthorized"));
         }
 
         if (info !== request.cookies['XSRF-TOKEN'] || info !== request.headers['x-xsrf-token']) {

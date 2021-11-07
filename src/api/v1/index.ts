@@ -1,16 +1,23 @@
 import express from "express";
-import { Router } from "express";
-import sucessHandler from "../../utils/sucessHandler";
-
-// import routes
-import authRouter from "./routes/authRouter";
+import successHandler from "@/utils/successHandler";
+import authRouter from "./routes/auth.Router";
+import userRouter from "./routes/user.Router";
+import errorHandler from "@/utils/errorHandler";
 
 type Options = {
     expressApplication: express.Application;
     apiPrefix: string;
 }
 
-export default ({ expressApplication, apiPrefix }: Options) => {
-    expressApplication.get(`${apiPrefix}/ping`, (_, response) => sucessHandler(response, { message: "pong" }));
+export default ({expressApplication, apiPrefix}: Options) => {
+    expressApplication.get(`${apiPrefix}/ping`, (request, response) => {
+        try {
+            successHandler(response, {message: 'pong'});
+        } catch (error) {
+            errorHandler(response, error);
+        }
+    });
+
     expressApplication.use(`${apiPrefix}/auth`, authRouter());
+    expressApplication.use(`${apiPrefix}/user`, userRouter());
 }

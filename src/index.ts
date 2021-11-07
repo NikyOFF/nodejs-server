@@ -1,11 +1,16 @@
 import "reflect-metadata";
 import config from "@/config";
 import ExpressApp from "@/classes/ExpressApp";
-
-import logger from "./loaders/logger";
+import * as fs from "fs";
 
 async function main() {
     console.clear();
+
+    const exist = fs.existsSync(`${process.cwd()}/${config.UPLOADS_PATH}`);
+
+    if (!exist) {
+        fs.mkdirSync(`${process.cwd()}/${config.UPLOADS_PATH}`);
+    }
 
     const app: ExpressApp = new ExpressApp({
         serverPort: config.SERVER_PORT,
@@ -13,9 +18,7 @@ async function main() {
         databaseURI: config.DATABASE_URI,
     });
 
-    logger.profile(1)
     await app.start();
-    logger.profile(1)
 }
 
 main()

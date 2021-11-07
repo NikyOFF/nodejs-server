@@ -1,7 +1,6 @@
 import {EventSubscriber, On} from "event-dispatch";
 import winston from "winston";
 import Container, {Service} from "typedi";
-import {Agenda} from "agenda";
 
 import {EContainerName} from "@/enums/EContainerName";
 import {EUserEvent} from "@/enums/EUserEvent";
@@ -11,12 +10,9 @@ import {IUserEventDTO} from "@/subscribers/User.Subscriber/IUserEventDTO";
 @EventSubscriber()
 export default class UserSubscriber {
     constructor(
-        private readonly logger: winston.Logger = Container.get(EContainerName.LOGGER),
-        private readonly userModel: Models.UserModel = Container.get(EContainerName.USER_MODEL),
-        private readonly agenda: Agenda = Container.get(EContainerName.AGENDA)
+        private readonly logger: winston.Logger = Container.get(EContainerName.LOGGER)
     ) {
     }
-
 
     @On(EUserEvent.USER_SIGN_UP)
     async onUserSignUp(data: IUserEventDTO[EUserEvent.USER_SIGN_UP]) {

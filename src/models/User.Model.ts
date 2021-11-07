@@ -1,4 +1,5 @@
-import { model, Schema } from "mongoose";
+import {model, Schema} from "mongoose";
+import {EUserRole} from "@/enums/EUserRole";
 
 export const userSchema = new Schema({
     login: {
@@ -9,14 +10,9 @@ export const userSchema = new Schema({
         type: String,
         required: true
     },
-    email: {
+    role: {
         type: String,
-        required: true
-    },
-    lastLogin: {
-        type: Date,
-        required: false,
-        default: new Date()
+        default: EUserRole[EUserRole.USER]
     }
 });
 

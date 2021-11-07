@@ -4,8 +4,8 @@ export default async () => {
     try {
         await import("@/subscribers");
 
-        Logger.verbose('Initialized', { label: 'eventLoader' });
-    } catch(error) {
-        Logger.error(error, { label: 'eventLoader' });
+        Logger.verbose('Initialized', {label: 'eventLoader'});
+    } catch (error) {
+        Logger.error(error, {label: 'eventLoader'});
     }
 }

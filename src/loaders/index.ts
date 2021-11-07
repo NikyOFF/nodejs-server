@@ -1,10 +1,11 @@
 import ExpressApp from "../classes/ExpressApp";
-import mongooseLoader from "./mongoose.loader";
-import { EContainerNames } from "../enums/EContainerNames";
-import { userModel } from "../models/User";
+import {EContainerName} from "@/enums/EContainerName";
+import {userModel} from "@/models/User.Model";
 import dependencyInjector from "./dependency.injector";
+import jobsLoader from "./jobs.loader";
+import mongooseLoader from "./mongoose.loader";
 import expressLoader from "./express.loader";
-import "./events";
+import eventLoader from "./event.loader";
 
 type InitOptions = {
     app: ExpressApp;
@@ -12,17 +13,21 @@ type InitOptions = {
 }
 
 export = {
-    async init ({ app, databaseURI }: InitOptions) {
+    async init({app, databaseURI}: InitOptions) {
         const modelInstances: Models.ModelInstance[] = [
-            { name: EContainerNames.USER_MODEL, model: userModel }
-        ]
+            {name: EContainerName.USER_MODEL, model: userModel}
+        ];
 
-        await dependencyInjector({
+        const {agenda} = await dependencyInjector({
             models: modelInstances
         });
-        
-        await mongooseLoader({ databaseURI: databaseURI });
 
-        await expressLoader({ expressApplication: app.expressApplication });
+        await jobsLoader(agenda);
+
+        await mongooseLoader();
+
+        await expressLoader({expressApplication: app.expressApplication});
+
+        await eventLoader();
     }
 }

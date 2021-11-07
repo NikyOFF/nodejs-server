@@ -6,7 +6,7 @@ import {EContainerName} from "@/enums/EContainerName";
 export default function errorHandler(response: Response, error: Error, code: number = 400): void {
     const loggerInstance = Container.get<Logger>(EContainerName.LOGGER);
 
-    loggerInstance.error(error.message ?? "unknown", { label: "errorHandler" });
+    loggerInstance.error(error.message ?? "unknown", {label: "errorHandler"});
 
     response.status(code).json({
         success: false,

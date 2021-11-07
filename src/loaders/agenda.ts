@@ -5,7 +5,7 @@ export default (): Agenda => {
     return new Agenda({
         db: {
             address: config.DATABASE_URI,
-            collection: config.AGENDA_DATABASE_COLLECTION
+            collection: config.AGENDA.DATABASE_COLLECTION
         }
     });
 }

@@ -1,6 +1,5 @@
 import {Router} from "express";
 import {celebrate, Joi, Segments} from "celebrate";
-
 import AuthorityController from "@/controllers/Auth.Controller";
 import {EJwtStrategy} from "@/enums/EJwtStrategy";
 import csrfProtection from "@/api/middleware/csrfProtection";
@@ -38,6 +37,11 @@ export default () => {
 
     router.post(
         '/logout',
+        celebrate({
+            [Segments.HEADERS]: Joi.object({
+                "x-xsrf-token": Joi.string().required(),
+            }).unknown()
+        }),
         authenticate(EJwtStrategy.USER_JWT, {session: false}),
         csrfProtection(),
         requestHandler(AuthorityController.logout)
@@ -45,6 +49,11 @@ export default () => {
 
     router.post(
         '/verifyToken',
+        celebrate({
+            [Segments.HEADERS]: Joi.object({
+                "x-xsrf-token": Joi.string().required()
+            }).unknown()
+        }),
         authenticate(EJwtStrategy.USER_JWT, {session: false}),
         csrfProtection(),
         requestHandler(AuthorityController.verifyToken)
@@ -52,6 +61,11 @@ export default () => {
 
     router.post(
         '/verifyAdminToken',
+        celebrate({
+            [Segments.HEADERS]: Joi.object({
+                "x-xsrf-token": Joi.string().required()
+            }).unknown()
+        }),
         authenticate(EJwtStrategy.ADMIN_JWT, {session: false}),
         csrfProtection(),
         requestHandler(AuthorityController.verifyToken)

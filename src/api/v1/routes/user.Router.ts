@@ -1,5 +1,4 @@
 import {Router} from "express";
-import {celebrate, Joi, Segments} from "celebrate";
 
 import {EJwtStrategy} from "@/enums/EJwtStrategy";
 import UserController from "@/controllers/User.Controller";

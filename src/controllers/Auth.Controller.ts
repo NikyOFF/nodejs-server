@@ -1,48 +1,69 @@
-import { Request, Response } from "express";
+import {Request, Response} from "express";
 import Container from "typedi";
-import { IUserDTO } from "../interfaces/IUser";
 import AuthService from "../services/Auth.Service";
 import errorHandler from "../utils/errorHandler";
-import sucessHandler from "../utils/sucessHandler";
+import successHandler from "../utils/successHandler";
+import config from "@/config";
 
-export = {
+export default {
     async signUp(request: Request, response: Response) {
         try {
-            const userDTO = <IUserDTO>request.body;
-
+            const {login, password} = <{ login: string, password: string }>request.body;
             const authService = Container.get(AuthService);
+            const xsrfToken = request.csrfToken();
+            const {token} = await authService.signUp(login, password, xsrfToken);
 
-            const { user, token } = await authService.signUp(userDTO);
-
-            sucessHandler(response, {
-                message: "User registred!",
-                data: {
-                    id: user._id,
-                    token: token
-                }
+            response.cookie('XSRF-TOKEN', xsrfToken, {
+                secure: config.SERVER_PROTOCOL === 'https',
+                sameSite: 'strict'
             });
-        } catch(error) {
+
+            response.cookie('TOKEN', token, {
+                secure: config.SERVER_PROTOCOL === 'https',
+                httpOnly: true,
+                sameSite: 'strict'
+            });
+
+            successHandler(response, {
+                message: "User registered!",
+            });
+        } catch (error) {
             errorHandler(response, error);
         }
     },
 
     async signIn(request: Request, response: Response) {
         try {
-            const userDTO = <{ login: string, password: string }>request.body;
-
+            const {login, password} = <{ login: string, password: string }>request.body;
             const authService: AuthService = Container.get(AuthService);
+            const xsrfToken = request.csrfToken();
+            const {token} = await authService.signIn(login, password, xsrfToken);
 
-            const { user, token } = await authService.signIn(userDTO.login, userDTO.password);
-
-            sucessHandler(response, {
-                message: "User authorized!",
-                data: {
-                    id: user._id,
-                    token: token
-                }
+            response.cookie('XSRF-TOKEN', xsrfToken, {
+                secure: config.SERVER_PROTOCOL === 'https',
+                sameSite: 'strict'
             });
-        } catch(error) {
+
+            response.cookie('TOKEN', token, {
+                secure: config.SERVER_PROTOCOL === 'https',
+                httpOnly: true,
+                sameSite: 'strict'
+            });
+
+            successHandler(response, {
+                message: "User authorized!",
+            });
+        } catch (error) {
             errorHandler(response, error);
         }
+    },
+
+    async logout(request: Request, response: Response) {
+        response.clearCookie('TOKEN');
+        successHandler(response);
+    },
+
+    async verifyToken(request: Request, response: Response) {
+        successHandler(response);
     }
 }
