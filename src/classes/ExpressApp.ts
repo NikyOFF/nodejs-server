@@ -1,15 +1,8 @@
 import express from "express";
-import mongoose from "mongoose";
 import http from "http";
-import loaders from "../loaders";
-import Logger from "../loaders/logger";
-
-type ExpressAppConfig = {
-    databaseURI: string;
-    serverPort?: number;
-    serverHostname?: string;
-    middlewares?: express.Handler[];
-}
+import loaders from "@/loaders";
+import Logger from "@/loaders/logger";
+import config from "@/config";
 
 export default class ExpressApp {
     public server: http.Server = null;
@@ -19,21 +12,19 @@ export default class ExpressApp {
     protected serverHostname: string;
     protected databaseURI: string;
 
-    constructor(config: ExpressAppConfig) {
-        this.serverPort = config.serverPort ?? 20000;
-        this.serverHostname = config.serverHostname ?? 'localhost';
-        this.databaseURI = config.databaseURI;
+    constructor() {
+        this.serverPort = config.SERVER_PORT;
+        this.serverHostname = config.SERVER_HOSTNAME;
+        this.databaseURI = config.DATABASE_URI;
     }
 
     async start(): Promise<void> {
         console.clear();
 
-        await loaders.init({app: this, databaseURI: this.databaseURI});
-
-        await mongoose.connect(this.databaseURI);
+        await loaders.init(this);
 
         this.server = this.expressApplication.listen(this.serverPort, this.serverHostname, () => {
-            Logger.info(`Server started on http://${this.serverHostname}:${this.serverPort}/`, {label: "Express"});
+            Logger.info(`Server started on ${config.SERVER_PROTOCOL}://${this.serverHostname}:${this.serverPort}/`, {label: "Express"});
         });
 
         this.server.on('error', error => {

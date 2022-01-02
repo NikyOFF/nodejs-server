@@ -1,30 +1,18 @@
 import ExpressApp from "../classes/ExpressApp";
-import {EContainerName} from "@/enums/EContainerName";
-import {userModel} from "@/models/User.Model";
 import dependencyInjector from "./dependency.injector";
 import jobsLoader from "./jobs.loader";
-import mongooseLoader from "./mongoose.loader";
+import typeOrmLoader from "./typeOrm.loader";
 import expressLoader from "./express.loader";
 import eventLoader from "./event.loader";
 
-type InitOptions = {
-    app: ExpressApp;
-    databaseURI: string;
-}
 
 export = {
-    async init({app, databaseURI}: InitOptions) {
-        const modelInstances: Models.ModelInstance[] = [
-            {name: EContainerName.USER_MODEL, model: userModel}
-        ];
-
-        const {agenda} = await dependencyInjector({
-            models: modelInstances
-        });
+    async init(app: ExpressApp) {
+        const {agenda} = await dependencyInjector();
 
         await jobsLoader(agenda);
 
-        await mongooseLoader();
+        await typeOrmLoader();
 
         await expressLoader({expressApplication: app.expressApplication});
 

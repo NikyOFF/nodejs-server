@@ -1,11 +1,11 @@
 import {NextFunction, Request, Response} from "express";
 import passport, {AuthenticateOptions} from "passport";
 import {Strategy, StrategyOptions, VerifyCallback} from "passport-jwt";
-import config from "../../config"
-import {Container} from "typedi";
-import {EContainerName} from "@/enums/EContainerName";
+import config from "@/config"
 import {EJwtStrategy, JwtStrategy} from "@/enums/EJwtStrategy";
 import {EUserRole} from "@/enums/EUserRole";
+import {getRepository, Repository} from "typeorm";
+import {User} from "@/entity/User.Entity";
 
 //Strategy options
 const userOptions: StrategyOptions = {
@@ -16,26 +16,22 @@ const userOptions: StrategyOptions = {
 }
 
 //General verify
-const verifyUser = (valid: (userRecord: Models.UserDocument) => boolean) => (payload, done) => {
-    const userModelInstance = Container.get<Models.UserModel>(EContainerName.USER_MODEL);
+const verifyUser = (valid: (userRecord: User) => boolean) => async (payload, done) => {
+    const userRepositoryInstance: Repository<User> = getRepository(User);
 
-    userModelInstance.findOne({id: payload['id']}, '', null, (error, userRecord) => {
-        if (error) {
-            return done(error);
-        }
+    const userCandidate = await userRepositoryInstance.findOne({id: payload['id']});
 
-        if (!userRecord) {
-            return done(new Error("[verify] Unauthorized"));
-        }
+    if (!userCandidate) {
+        return done(new Error("[verify] Unauthorized"));
+    }
 
-        const haveAccess = valid(userRecord);
+    const haveAccess = valid(userCandidate);
 
-        if (!haveAccess) {
-            return done(new Error("[verify] does not have access"));
-        }
+    if (!haveAccess) {
+        return done(new Error("[verify] does not have access"));
+    }
 
-        return done(null, userRecord, payload['_csrf']);
-    });
+    return done(null, userCandidate, payload['_csrf']);
 }
 
 //Concrete verify callbacks

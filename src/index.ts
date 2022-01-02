@@ -12,11 +12,7 @@ async function main() {
         fs.mkdirSync(`${process.cwd()}/${config.UPLOADS_PATH}`);
     }
 
-    const app: ExpressApp = new ExpressApp({
-        serverPort: config.SERVER_PORT,
-        serverHostname: config.SERVER_HOSTNAME,
-        databaseURI: config.DATABASE_URI,
-    });
+    const app: ExpressApp = new ExpressApp();
 
     await app.start();
 }

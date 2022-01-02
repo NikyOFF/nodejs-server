@@ -4,17 +4,9 @@ import Logger from "./logger";
 import {Agenda} from "agenda/es";
 import agenda from "@/loaders/agenda";
 
-type Options = {
-    models: Models.ModelInstance[];
-}
-
-export default async ({models}: Options): Promise<{ agenda: Agenda }> => {
+export default async (): Promise<{ agenda: Agenda }> => {
     try {
         const agendaInstance = agenda();
-
-        models.forEach(model => {
-            Container.set(model.name, model.model)
-        });
 
         Container.set(EContainerName.AGENDA, agendaInstance);
         Container.set(EContainerName.LOGGER, Logger);

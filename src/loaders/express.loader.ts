@@ -10,8 +10,6 @@ import errorHandler from "@/utils/errorHandler";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
 
-import bodyParse from "body-parser";
-
 type Options = {
     expressApplication: express.Application
 }
