@@ -1,6 +1,5 @@
-<h1>nodejs-server</h1>
-
-<h2>Nodejs server template</h2>
+#nodejs-server
+version: ``2.2.0``
 
 __Entry point for app__ — `index.ts`
 
@@ -33,7 +32,6 @@ all thanks to design patterns!
 - agendash2
 - bcryptjs
 - celebrate
-- mongoose
 - express
 - cookie-parser
 - jsonwebtoken
@@ -43,11 +41,12 @@ all thanks to design patterns!
 - morgan
 - passport
 - passport-jwt
+- typeorm
 
 <h3>Database</h3>
 <hr/>
 
-- MongoDB
+- Any of supported by TypeORM
 
 
 <h3>Patterns</h3>
@@ -68,9 +67,11 @@ all thanks to design patterns!
 Script | Description
 ------------ | -------------
 start | Runs the build version of the server
-agendash | Runs agendash
-build | Compiles the project
 dev | Launches a project in a development environment
+build | Compiles the project
+agendash | Runs agendash
+typeorm | TypeORM CLI
+
 
 <h3>Folder Structure</h3>
 <hr/>
@@ -82,11 +83,12 @@ loaders | Modules for split app launch
 api | Express routes for all the endpoints of the app
 controllers | Controllers for app endpoints routes
 services | App business logic
-models | MongoDB models
+entity | TypeORM entities
 subscribers | Event handlers for async task
 jobs | Jobs definitions for agenda.js
 utils | Useful stuff
-`classes` | `Application classeы`
+`decorators` | `Application decoratos`
+`classes` | `Application classe`
 `interfaces` | `Application interfaces`
 `enums` | `Application enums`
 `types` | `Application types`
